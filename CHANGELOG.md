@@ -17,7 +17,8 @@ All notable changes to this project are documented here. The format follows
 ### Added
 
 - Multi-chat panel with up to 16 live conversation windows.
-- Top-right split-view button in the conversation header.
+- Top-right split-view button in the conversation header, including a floating
+  variant for blank sessions whose header utilities are hidden by Harness.
 - Freely resizable windows (drag the bottom-right corner), double-click reset,
   and a toolbar action to reset all pane sizes.
 - Native conversation surface per window (hero, transcript, composer,

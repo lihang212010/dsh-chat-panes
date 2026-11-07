@@ -41,8 +41,9 @@ rejects `private: true` and the template `your-github-user` repository URL.
 
 Run through these before opening a pull request:
 
-- [ ] The split-view button appears at the top-right of a conversation with
-      messages, and is absent for a blank session.
+- [ ] The split-view button appears at the top-right of both a conversation
+      with messages and a blank session (the blank header uses a floating
+      entry).
 - [ ] Opening the panel adds the current session; opening another session and
       clicking the button again appends it.
 - [ ] `＋ New chat` adds a blank session; the 16th addition disables the button.

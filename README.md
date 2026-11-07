@@ -40,7 +40,7 @@ Open it from the split-view button at the **top-right of the conversation header
 ## Features
 
 - **Native chat in every window.** Each window reuses the shipped Conversation component factory (`conversation.content`, embedded variant), so drafts, attachments, tool cards, approvals, streaming and session history behave exactly like the main conversation.
-- **Top-right entry, no sidebar clutter.** A single split-view icon appears in the conversation header. Click it to open the panel with the current conversation; open another conversation and click again to add that one to the same split view.
+- **Top-right entry, no sidebar clutter.** A single split-view icon appears in the conversation header. Click it to open the panel with the current conversation; open another conversation and click again to add that one to the same split view. Blank sessions get the same entry as a floating button, so you can start working before the first message.
 - **Up to 16 windows.** The add button disables itself at 16 and explains why in its tooltip.
 - **Free resize.** Drag a window's bottom-right corner to change its width and height; double-click the corner to reset that window. The toolbar's reset action clears every custom size.
 - **Open, close, expand, close all.** Close a window without losing its session, or expand a window into the full conversation view.
@@ -84,7 +84,7 @@ In the Plugin Manager, choose **Install a third-party plugin** and enter the abs
 
 ### 1. Open the panel
 
-1. Open a conversation that already has at least one message.
+1. Open a conversation. Blank sessions work too: the split-view button is shown as a floating entry until the first message.
 2. Find the **split-view icon** in the conversation header, at the top-right — it sits next to the `…` menu and the right-sidebar button.
 3. Click it. The main area switches to the multi-chat panel and the current conversation becomes the first window.
 
@@ -163,7 +163,7 @@ The panel toolbar also offers:
 
 | Symptom | Why | Fix |
 | --- | --- | --- |
-| The split-view button is missing | DSH hides the header utilities for a **blank** session (no message yet), or the plugin is disabled | Send a message first or open an existing conversation; check **Plugins** that the bundle is enabled; refresh the page once. |
+| The split-view button is missing | The bundle is disabled, the page predates the install, or the Host is incompatible | Check **Plugins** that the bundle is enabled; refresh the page once; verify the Harness version against [Compatibility](#compatibility). |
 | **＋ New chat** is disabled | There are already 16 windows, or this Peer may not create sessions | Close a window; check the profile's session-create permission. |
 | Windows disappeared after restarting the desktop app | Pane layout is stored in browser `localStorage`, and the desktop app serves the UI from a new local port on each launch, so the origin changes | Recreate the windows; this is a known limitation. |
 | A window is too narrow to read | The free-wrap layout keeps a 300 px minimum width | Enlarge the app window, resize the pane, or close some windows. |

@@ -138,6 +138,7 @@ window.__ModuleLoader__.load({
 .mcx-open-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;border-radius:var(--dsw-radius-sm);background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;flex:none}
 .mcx-open-btn:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}
 .mcx-open-btn:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:2px}
+.mcx-open-btn-float{position:absolute;top:10px;right:52px;z-index:5}
 `;
 
     /* ------------------------------------------------------------------ */
@@ -801,6 +802,28 @@ window.__ModuleLoader__.load({
         }, h(SplitIcon, { size: 17 })));
     }
 
+    /**
+     * Blank sessions hide the whole header utility area, so the normal header
+     * button is not rendered there. This root-scoped entry lives in the header's
+     * leading seat and paints itself over the same top-right spot only while the
+     * current session is blank, keeping one visible entry in every state.
+     */
+    function BlankHeaderButton(props) {
+      const { t, useCurrentSession, openWithSession } = props;
+      const current = useCurrentSession((value) => value);
+      if (current === undefined || current.blank !== true || typeof current.id !== 'string') return null;
+      return h(React.Fragment, null,
+        h('style', { key: 'style' }, HEADER_CSS),
+        h('button', {
+          key: 'button',
+          type: 'button',
+          className: 'mcx-open-btn mcx-open-btn-float',
+          title: t('openPanel'),
+          'aria-label': t('openPanel'),
+          onClick: () => openWithSession(current.id),
+        }, h(SplitIcon, { size: 17 })));
+    }
+
     /* ------------------------------------------------------------------ */
     /* Plugin                                                              */
     /* ------------------------------------------------------------------ */
@@ -836,6 +859,67 @@ window.__ModuleLoader__.load({
         }
       }
       return best === undefined ? undefined : best.workspaceId;
+    }
+
+    /**
+     * Observable current Session id plus its blank flag. The blank session hides
+     * the normal header utilities, so the floating entry needs to know when to
+     * stand in for them.
+     */
+    function createCurrentSessionSource(ctx) {
+      const read = () => {
+        const service = ctx.uiWorkspace;
+        const selection = service === undefined || service === null ? undefined : service.selection;
+        const id = selection === undefined ? undefined : selection.getSnapshot().sessionId;
+        const row = typeof id === 'string' ? ctx.sessions.list.getSnapshot().byId[id] : undefined;
+        return { id, blank: row === undefined ? false : row.blank === true };
+      };
+      let snapshot = read();
+      const listeners = new Set();
+      let disposers;
+      const publish = () => {
+        const next = read();
+        if (next.id === snapshot.id && next.blank === snapshot.blank) return;
+        snapshot = next;
+        for (const listener of [...listeners]) listener();
+      };
+      const ensure = () => {
+        if (disposers !== undefined) return;
+        const service = ctx.uiWorkspace;
+        const selected = service === undefined || service === null ? undefined : service.selection;
+        const next = [
+          selected === undefined ? () => {} : selected.subscribe(publish),
+          ctx.sessions.list.subscribe(publish),
+        ];
+        disposers = next;
+      };
+      const release = () => {
+        if (disposers === undefined) return;
+        const current = disposers;
+        disposers = undefined;
+        for (const dispose of current) {
+          try {
+            dispose();
+          } catch (_error) {
+            /* Ignore teardown races. */
+          }
+        }
+      };
+      return {
+        getSnapshot: () => snapshot,
+        subscribe(listener) {
+          listeners.add(listener);
+          ensure();
+          return () => {
+            listeners.delete(listener);
+            if (listeners.size === 0) release();
+          };
+        },
+        dispose() {
+          listeners.clear();
+          release();
+        },
+      };
     }
 
     function apply(ctx) {
@@ -897,6 +981,20 @@ window.__ModuleLoader__.load({
           },
         }),
       }, HeaderButton)), 'multichat: header entry');
+
+      const currentSession = createCurrentSessionSource(ctx);
+      ctx.effect(() => () => currentSession.dispose(), 'multichat: current session source');
+      ctx.effect(() => ctx.slots.inject('conversation.header.leading', () => ctx.slots.register({
+        name: 'conversation.header.leading',
+        locale: NS,
+        inject: () => ({
+          hooks: { currentSession },
+          openWithSession: (sessionId) => {
+            store.add(sessionId);
+            ctx.layout.selectPanel(PANEL_ID);
+          },
+        }),
+      }, BlankHeaderButton)), 'multichat: blank header entry');
     }
 
     return {
