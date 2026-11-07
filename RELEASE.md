@@ -71,6 +71,25 @@ npm login
 npm publish --access public
 ```
 
+If your default registry is a mirror such as `npmmirror`, `npm login` will try
+to log in to that mirror. Mirrors are read-only: they cannot host your package.
+The package already pins `publishConfig.registry` to the official registry, but
+the login itself must target it explicitly:
+
+```bash
+npm login --registry=https://registry.npmjs.org/
+npm whoami --registry=https://registry.npmjs.org/
+npm publish
+```
+
+Alternatively, create an access token on npmjs.com (Access Tokens → Generate
+New Token, with publish permission) and add it to `~/.npmrc` without changing
+the default install registry:
+
+```ini
+//registry.npmjs.org/:_authToken=npm_your_token
+```
+
 For a scoped package, replace the name and keep `--access public`.
 
 Verify the result:

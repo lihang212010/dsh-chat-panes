@@ -1,72 +1,73 @@
 {
-    "name":  "dsh-multichat",
-    "version":  "0.1.0",
-    "description":  "Open up to 16 live chat windows side by side in the DeepSeek Harness Web GUI, with a top-right split-view button and freely resizable panes.",
-    "type":  "module",
-    "license":  "MIT",
-    "author":  "Long Laban",
-    "keywords":  [
-                     "deepseek",
-                     "deepseek-harness",
-                     "dsh",
-                     "dsh-plugin",
-                     "plugin",
-                     "chat",
-                     "multi-window",
-                     "split-view"
-                 ],
-    "repository":  {
-                       "type":  "git",
-                       "url":  "git+https://github.com/lihang212010/dsh-multichat.git"
-                   },
-    "homepage":  "https://github.com/lihang212010/dsh-multichat#readme",
-    "bugs":  {
-                 "url":  "https://github.com/lihang212010/dsh-multichat/issues"
-             },
-    "exports":  {
-                    ".":  "./index.js",
-                    "./client":  "./client.js",
-                    "./locale/*.json":  "./locale/*.json",
-                    "./icon":  "./icon.svg"
-                },
-    "files":  [
-                  "index.js",
-                  "client.js",
-                  "cordis.patch.yml",
-                  "locale/*.json",
-                  "icon.svg",
-                  "docs/*.png",
-                  "README.md",
-                  "README.zh.md",
-                  "CHANGELOG.md",
-                  "LICENSE"
-              ],
-    "scripts":  {
-                    "test":  "node scripts/check.mjs",
-                    "prepublishOnly":  "node scripts/check.mjs --publish"
-                },
-    "engines":  {
-                    "dsh":  "\u003e=0.2.2-rc.1 \u003c0.3.0"
-                },
-    "publishConfig":  {
-                          "access":  "public"
-                      },
-    "dsh":  {
-                "bundle":  {
-                               "patch":  "./cordis.patch.yml"
-                           },
-                "client":  {
-                               "platform":  "web",
-                               "immediately":  true,
-                               "inject":  [
-                                              "@deepseek-ai/dsh-client-ui-layout",
-                                              "@deepseek-ai/dsh-client-ui-sidebar",
-                                              "@deepseek-ai/dsh-client-ui-session",
-                                              "@deepseek-ai/dsh-client-ui-workspace",
-                                              "@deepseek-ai/dsh-client-ui-conversation",
-                                              "@deepseek-ai/dsh-client-ui-chat",
-                                              "@deepseek-ai/dsh-client-locale"
-                                          ]
-                           }
-            }
+  "name": "dsh-multichat",
+  "version": "0.1.0",
+  "description": "Open up to 16 live chat windows side by side in the DeepSeek Harness Web GUI, with a top-right split-view button and freely resizable panes.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Long Laban",
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "plugin",
+    "chat",
+    "multi-window",
+    "split-view"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lihang212010/dsh-multichat.git"
+  },
+  "homepage": "https://github.com/lihang212010/dsh-multichat#readme",
+  "bugs": {
+    "url": "https://github.com/lihang212010/dsh-multichat/issues"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "docs/*.png",
+    "README.md",
+    "README.zh.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/check.mjs",
+    "prepublishOnly": "node scripts/check.mjs --publish"
+  },
+  "engines": {
+    "dsh": ">=0.2.2-rc.1 <0.3.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-session",
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-chat",
+        "@deepseek-ai/dsh-client-locale"
+      ]
+    }
+  }
 }
