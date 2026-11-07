@@ -92,6 +92,41 @@ the default install registry:
 
 For a scoped package, replace the name and keep `--access public`.
 
+### Publishing with 2FA
+
+npm requires a second factor for publishes. An account that reports
+`two-factor auth: disabled` can still receive:
+
+```text
+403 Forbidden - PUT https://registry.npmjs.org/dsh-multichat -
+Two-factor authentication or granular access token with bypass 2fa enabled is required to publish packages.
+```
+
+Use one of these:
+
+- **TOTP** — enable two-factor authentication in the npm account settings, then
+  publish with a fresh code:
+
+  ```bash
+  npm publish --otp=123456
+  ```
+
+- **Granular token with Bypass 2FA** (recommended for repeat releases and CI):
+  1. npmjs.com → Access Tokens → Generate New Token → Granular Access Token.
+  2. Permissions: **Read and write**; Packages: **All packages**.
+  3. Enable **Bypass 2FA**.
+  4. Store the token locally, then publish:
+
+     ```bash
+     npm config set //registry.npmjs.org/:_authToken npm_your_token
+     npm publish
+     ```
+
+  For GitHub Actions, save the token as the repository secret `NPM_TOKEN` and
+  uncomment the `NODE_AUTH_TOKEN` lines in `.github/workflows/publish.yml`.
+
+Never commit a token. Revoke it immediately if it leaks.
+
 Verify the result:
 
 ```bash
