@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-11-07
+
+### Fixed
+
+- Show the split-view entry on blank sessions. Harness hides the session header
+  utilities while a session has no messages, so the plugin now contributes a
+  floating top-right button in the header leading seat for that state.
+
 ## [0.1.1] - 2026-11-07
 
 ### Changed
@@ -17,8 +25,7 @@ All notable changes to this project are documented here. The format follows
 ### Added
 
 - Multi-chat panel with up to 16 live conversation windows.
-- Top-right split-view button in the conversation header, including a floating
-  variant for blank sessions whose header utilities are hidden by Harness.
+- Top-right split-view button in the conversation header.
 - Freely resizable windows (drag the bottom-right corner), double-click reset,
   and a toolbar action to reset all pane sizes.
 - Native conversation surface per window (hero, transcript, composer,
