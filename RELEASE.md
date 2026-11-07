@@ -5,11 +5,11 @@ repository.
 
 ## 0. One-time decisions
 
-- **Package name.** `dsh-multichat` is the intended unscoped name. If it is
-  taken by the time you publish, use a scope you own, for example
-  `@your-name/dsh-multichat`, and update `package.json`, `cordis.patch.yml`, the
-  `__ModuleLoader__` id in `client.js`, and the install commands in both
-  READMEs.
+- **Package name.** Published as `@lihang212010/dsh-multichat`. npm rejected the
+  unscoped `dsh-multichat` as too similar to the existing `dsh-multi-chat`.
+  If you publish under another account, update `package.json`,
+  `cordis.patch.yml`, the `__ModuleLoader__` id in `client.js`, and the install
+  commands in both READMEs together.
 - **License holder.** `LICENSE` says `Long Laban`. Change it if you publish
   under a different name.
 - **Author metadata.** `package.json` sets `author` to `Long Laban`.
@@ -98,7 +98,7 @@ npm requires a second factor for publishes. An account that reports
 `two-factor auth: disabled` can still receive:
 
 ```text
-403 Forbidden - PUT https://registry.npmjs.org/dsh-multichat -
+403 Forbidden - PUT https://registry.npmjs.org/@lihang212010%2Fdsh-multichat -
 Two-factor authentication or granular access token with bypass 2fa enabled is required to publish packages.
 ```
 
@@ -130,7 +130,7 @@ Never commit a token. Revoke it immediately if it leaks.
 Verify the result:
 
 ```bash
-npm view dsh-multichat version
+npm view @lihang212010/dsh-multichat version
 ```
 
 ## 5. Tag the release
@@ -163,7 +163,7 @@ statement to the release.
 On a clean Harness profile:
 
 1. **Plugins → Add plugin → Install a third-party plugin**.
-2. Enter `dsh-multichat`.
+2. Enter `@lihang212010/dsh-multichat`.
 3. Confirm that the bundle and plugin rows appear, the icon and localized title
    render, and the split-view button opens the panel.
 4. Repeat with the local directory path to confirm source installs still work.

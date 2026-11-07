@@ -1,5 +1,5 @@
 {
-  "name": "dsh-multichat",
+  "name": "@lihang212010/dsh-multichat",
   "version": "0.1.0",
   "description": "Open up to 16 live chat windows side by side in the DeepSeek Harness Web GUI, with a top-right split-view button and freely resizable panes.",
   "type": "module",

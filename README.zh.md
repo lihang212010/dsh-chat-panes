@@ -1,6 +1,6 @@
 # dsh-multichat
 
-[![npm version](https://img.shields.io/npm/v/dsh-multichat.svg)](https://www.npmjs.com/package/dsh-multichat)
+[![npm version](https://img.shields.io/npm/v/@lihang212010/dsh-multichat.svg)](https://www.npmjs.com/package/@lihang212010/dsh-multichat)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 在 DeepSeek Harness Web GUI 中并排运行最多 **16 个真实对话窗口**。
@@ -32,14 +32,14 @@
 
 1. 打开左侧栏 **插件**。
 2. 选择 **添加插件** → **安装第三方插件**。
-3. 输入 `dsh-multichat` 并确认。
+3. 输入 `@lihang212010/dsh-multichat` 并确认。
 4. 打开一个已有对话，点击头部右上角的分屏按钮。
 
-安装对话框也支持带版本号（`dsh-multichat@0.1.0`）、Git 地址、tarball 或本地目录绝对路径。
+安装对话框也支持带版本号（`@lihang212010/dsh-multichat@0.1.0`）、Git 地址、tarball 或本地目录绝对路径。
 
 ### 通过智能体
 
-让 DSH 智能体使用插件管理器安装该包，或调用等价的 `plugin_manager` `install_bundle`，target 为 `dsh-multichat`。
+让 DSH 智能体使用插件管理器安装该包，或调用等价的 `plugin_manager` `install_bundle`，target 为 `@lihang212010/dsh-multichat`。
 
 ### 从源码
 

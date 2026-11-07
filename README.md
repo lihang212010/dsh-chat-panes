@@ -1,6 +1,6 @@
 # dsh-multichat
 
-[![npm version](https://img.shields.io/npm/v/dsh-multichat.svg)](https://www.npmjs.com/package/dsh-multichat)
+[![npm version](https://img.shields.io/npm/v/@lihang212010/dsh-multichat.svg)](https://www.npmjs.com/package/@lihang212010/dsh-multichat)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Run up to **16 live conversations side by side** in the DeepSeek Harness Web GUI.
@@ -32,14 +32,14 @@ Open it from the split-view button at the **top-right of the conversation header
 
 1. Open **Plugins** in the DSH sidebar.
 2. Choose **Add plugin** → **Install a third-party plugin**.
-3. Enter `dsh-multichat` and confirm the installation.
+3. Enter `@lihang212010/dsh-multichat` and confirm the installation.
 4. Open an existing conversation and click the split-view button at the top-right of the header.
 
-The registry field also accepts an explicit version (`dsh-multichat@0.1.0`), a Git address, a tarball, or an absolute path to a local checkout.
+The registry field also accepts an explicit version (`@lihang212010/dsh-multichat@0.1.0`), a Git address, a tarball, or an absolute path to a local checkout.
 
 ### From an agent
 
-Ask your DSH agent to install the package with the plugin manager, or run the equivalent `plugin_manager` `install_bundle` action with target `dsh-multichat`.
+Ask your DSH agent to install the package with the plugin manager, or run the equivalent `plugin_manager` `install_bundle` action with target `@lihang212010/dsh-multichat`.
 
 ### From source
 
