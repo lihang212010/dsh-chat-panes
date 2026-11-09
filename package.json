@@ -37,7 +37,7 @@
     "icon.svg",
     "docs/*.png",
     "README.md",
-    "README.zh.md",
+    "README.en.md",
     "CHANGELOG.md",
     "LICENSE"
   ],

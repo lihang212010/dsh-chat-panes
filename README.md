@@ -1,238 +1,238 @@
 # dsh-multichat
 
-**English** | [简体中文](README.zh.md)
+[English](README.en.md) | **简体中文**
 
 [![npm version](https://img.shields.io/npm/v/@lihang212010/dsh-multichat.svg)](https://www.npmjs.com/package/@lihang212010/dsh-multichat)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-lihang212010%2Fdsh--multichat-181717?logo=github)](https://github.com/lihang212010/dsh-multichat)
 
-Run up to **16 live conversations side by side** in the DeepSeek Harness Web GUI.
+在 DeepSeek Harness Web GUI 中并排运行最多 **16 个真实对话窗口**。
 
-Open it from the split-view button at the **top-right of the conversation header**, add windows with **＋ New chat**, and drag any window's bottom-right corner to resize it. Every window is the real Harness conversation surface — hero, transcript, composer, approvals and streaming included — not a simplified reimplementation.
+入口位于**对话页右上角**的分屏按钮；点击 **＋ 新建对话** 新增窗口，拖动任意窗口右下角即可自由调整大小。每个窗口都是 Harness 原生对话界面（Hero、消息流、输入框、审批、流式输出），不是简化的复刻。
 
-![Two chat windows side by side in the dark theme](docs/demo-dark.png)
+![暗色主题下并排的两个对话窗口](docs/demo-dark.png)
 
-> Unofficial community plugin. Not affiliated with or endorsed by DeepSeek.
+> 社区第三方插件，与 DeepSeek 官方无关，也未获得官方背书。
 
-## Contents
+## 目录
 
-- [Features](#features)
-- [Requirements](#requirements)
-- [Install](#install)
-- [How to use](#how-to-use)
-  - [Open the panel](#1-open-the-panel)
-  - [Add windows](#2-add-windows)
-  - [Add an existing conversation](#3-add-an-existing-conversation)
-  - [Work in parallel](#4-work-in-parallel)
-  - [Resize windows](#5-resize-windows)
-  - [Expand, close, and close all](#6-expand-close-and-close-all)
-  - [Everyday workflows](#7-everyday-workflows)
-  - [Tips](#8-tips)
-- [Troubleshooting](#troubleshooting)
-- [Update and uninstall](#update-and-uninstall)
-- [How it works](#how-it-works)
-- [Compatibility](#compatibility)
-- [Privacy](#privacy)
-- [Development](#development)
-- [Contributing](#contributing)
-- [License](#license)
+- [功能](#功能)
+- [环境要求](#环境要求)
+- [安装](#安装)
+- [使用方法](#使用方法)
+  - [打开面板](#1-打开面板)
+  - [新建窗口](#2-新建窗口)
+  - [加入已有对话](#3-加入已有对话)
+  - [并行工作](#4-并行工作)
+  - [调整窗口大小](#5-调整窗口大小)
+  - [展开、关闭与全部关闭](#6-展开关闭与全部关闭)
+  - [常见工作流](#7-常见工作流)
+  - [小技巧](#8-小技巧)
+- [常见问题](#常见问题)
+- [更新与卸载](#更新与卸载)
+- [实现](#实现)
+- [兼容性](#兼容性)
+- [隐私](#隐私)
+- [开发](#开发)
+- [贡献](#贡献)
+- [许可证](#许可证)
 
-## Features
+## 功能
 
-- **Native chat in every window.** Each window reuses the shipped Conversation component factory (`conversation.content`, embedded variant), so drafts, attachments, tool cards, approvals, streaming and session history behave exactly like the main conversation.
-- **Top-right entry, no sidebar clutter.** A single split-view icon appears in the conversation header. Click it to open the panel with the current conversation; open another conversation and click again to add that one to the same split view. Blank sessions get the same entry as a floating button, so you can start working before the first message.
-- **Up to 16 windows.** The add button disables itself at 16 and explains why in its tooltip.
-- **Free resize.** Drag a window's bottom-right corner to change its width and height; double-click the corner to reset that window. The toolbar's reset action clears every custom size.
-- **Open, close, expand, close all.** Close a window without losing its session, or expand a window into the full conversation view.
-- **Light and dark themes** through DSH theme tokens, plus Chinese and English UI copy.
-- **No telemetry, no network requests.** The plugin only talks to the local Harness UI.
+- **每个窗口都是原生对话**：复用官方 Conversation Component Factory（`conversation.content` 的 `embedded` 变体），草稿、附件、工具卡片、审批、流式输出、会话历史与主对话完全一致。
+- **入口在右上角**：对话头部右侧一个分屏图标，不占用左侧栏。点一次把当前会话放进分屏；切到另一个会话再点一次，即可把它追加进同一个分屏。空白会话也有同一个入口（浮动按钮），发第一条消息之前就能开始分屏。
+- **最多 16 个窗口**：到上限后「新建对话」自动禁用，并在提示中说明原因。
+- **自由缩放**：拖动窗口右下角调整宽高；双击右下角恢复该窗口默认大小；工具栏「恢复等分大小」清除全部自定义尺寸。
+- **展开 / 关闭 / 全部关闭**：关闭窗口不会删除会话，仍可在左侧栏历史中找到；展开则回到完整对话页。
+- **明暗主题**：全部使用 DSH 主题令牌；中英文界面文案。
+- **无遥测、无网络请求**：插件只与本机 Harness UI 通信。
 
-## Requirements
+## 环境要求
 
-- DeepSeek Harness `0.2.2-rc.1` or a compatible `0.2.x` release. The package declares `engines.dsh`, so the Plugin Manager can refuse an incompatible Host.
-- The Harness **Web UI** (desktop app or `dsh web`). This is a browser plugin; it does not apply to `headless` or `tui` profiles.
+- DeepSeek Harness `0.2.2-rc.1` 或兼容的 `0.2.x` 版本。包内声明了 `engines.dsh`，不兼容的 Host 会被 Plugin Manager 拒绝。
+- Harness **Web UI**（桌面端或 `dsh web`）。这是浏览器插件，不适用于 `headless` / `tui` profile。
 
-## Install
+## 安装
 
-### From the Plugin Manager (recommended)
+### 通过 Plugin Manager（推荐）
 
-1. Open **Plugins** in the DSH sidebar.
-2. Choose **Add plugin** → **Install a third-party plugin**.
-3. Enter the package name and confirm:
+1. 打开左侧栏 **插件**。
+2. 选择 **添加插件** → **安装第三方插件**。
+3. 输入包名并确认：
 
    ```text
    @lihang212010/dsh-multichat
    ```
 
-4. Open an existing conversation and click the split-view button at the top-right of the header.
+4. 打开一个已有对话，点击头部右上角的分屏按钮。
 
-The field also accepts an explicit version (`@lihang212010/dsh-multichat@0.1.0`), a Git address, a tarball, or an absolute path to a local checkout.
+安装对话框也支持带版本号（`@lihang212010/dsh-multichat@0.1.0`）、Git 地址、tarball 或本地目录绝对路径。
 
-### From an agent
+### 通过智能体
 
-Ask your DSH agent to install the package with the plugin manager, or run the equivalent `plugin_manager` `install_bundle` action with target `@lihang212010/dsh-multichat`.
+让 DSH 智能体使用插件管理器安装该包，或调用等价的 `plugin_manager` `install_bundle`，target 为 `@lihang212010/dsh-multichat`。
 
-### From source
+### 从源码
 
 ```bash
 git clone https://github.com/lihang212010/dsh-multichat.git
 ```
 
-In the Plugin Manager, choose **Install a third-party plugin** and enter the absolute path of the checkout. The Host links the directory, so edits are picked up without copying files.
+在 Plugin Manager 中选择 **安装第三方插件**，输入该目录的绝对路径。Host 会以链接方式安装，修改源码后无需复制文件。
 
-## How to use
+## 使用方法
 
-### 1. Open the panel
+### 1. 打开面板
 
-1. Open a conversation. Blank sessions work too: the split-view button is shown as a floating entry until the first message.
-2. Find the **split-view icon** in the conversation header, at the top-right — it sits next to the `…` menu and the right-sidebar button.
-3. Click it. The main area switches to the multi-chat panel and the current conversation becomes the first window.
+1. 打开一个对话。空白会话也可以：分屏按钮会以浮动按钮形式出现，直到发送第一条消息。
+2. 在对话头部右上角找到**分屏图标**——它位于 `…` 菜单和右侧边栏按钮旁边。
+3. 点击后，主区域切换为多窗口面板，当前对话自动成为第一个窗口。
 
-The panel replaces the center conversation area only. The sidebar, the right sidebar and the session history stay exactly where they were.
+面板只替换中间的对话区域；左侧栏、右侧边栏和会话历史都保持不变。
 
-### 2. Add windows
+### 2. 新建窗口
 
-- Click **＋ New chat** at the top-right of the panel.
-- Each click creates a blank session in the current workspace (or the most recently used workspace) and adds a window for it.
-- Windows are appended in order and wrap onto the next row when the panel is full.
-- The cap is **16 windows**. At 16 the button is disabled and its tooltip says so.
+- 点击面板右上角的 **＋ 新建对话**。
+- 每点一次，会在当前工作区（或最近使用的工作区）创建一个空白会话，并新增一个窗口。
+- 窗口按顺序追加；一行放不下时自动换到下一行。
+- 上限为 **16 个窗口**。达到 16 个后按钮禁用，悬停提示会说明原因。
 
-### 3. Add an existing conversation
+### 3. 加入已有对话
 
-1. Click **Back** (the left arrow, next to the add button) to return to the normal conversation view.
-2. Open the conversation you want from the sidebar.
-3. Click the split-view icon in the header again.
+1. 点击 **返回对话**（新增按钮左边的左箭头），回到普通对话页。
+2. 从左侧栏打开想加入的对话。
+3. 再次点击头部的分屏图标。
 
-That conversation is appended to the existing split view (if it is already there, nothing is duplicated). Repeat to build a board out of sessions you already have.
+该对话会被追加到现有分屏中（如果已经在里面，则不会重复添加）。重复这个操作，可以把历史会话逐渐拼成一个工作面板。
 
-### 4. Work in parallel
+### 4. 并行工作
 
-Each window is an independent conversation:
+每个窗口都是独立对话：
 
-- Its own composer, draft, attachments and model/permission controls.
-- Its own running state, queue, approvals and streaming output.
-- Its own workspace chip; a blank window can switch workspace before the first message.
+- 各自的输入框、草稿、附件、模型与权限选择；
+- 各自的任务运行状态、队列、审批和流式输出；
+- 各自的工作区标签；空白窗口可以在发送首条消息前切换工作区。
 
-Sending a message in one window does not change the others. The window header shows the live session title, its workspace, and whether the window is the active one.
+在一个窗口发消息不会影响其他窗口。窗口头部会显示实时会话标题、所属工作区以及是否为当前激活窗口。
 
-### 5. Resize windows
+### 5. 调整窗口大小
 
-- Hover a window and drag the **bottom-right corner**. The handle appears on hover.
-- Drag horizontally for width, vertically for height; the minimum is 300 × 220 px.
-- **Double-click** the corner to reset that window to its default size.
-- The toolbar's **reset sizes** icon clears every custom size at once.
-- Sizes persist when you close the panel and reopen it, or refresh the page in the same app session.
+- 将鼠标移到窗口上，拖动**右下角**；手柄会随之显示。
+- 横向拖动改宽度，纵向拖动改高度；最小尺寸为 300 × 220 px。
+- **双击**右下角，恢复该窗口的默认大小。
+- 工具栏的**恢复等分大小**图标可以一次清除所有自定义尺寸。
+- 关闭面板再打开，或在同一次应用运行中刷新页面，尺寸都会保留。
 
-Windows use a free-wrap layout. Making one wider may push the following windows onto the next row; that is expected.
+窗口采用自由换行布局：把某个窗口拉宽，可能会把后面的窗口挤到下一行，这是正常现象。
 
-### 6. Expand, close, and close all
+### 6. 展开、关闭与全部关闭
 
-Each window header has two actions:
+每个窗口头部有两个操作：
 
-| Action | What it does |
+| 操作 | 作用 |
 | --- | --- |
-| **Expand** | Opens that session in the full conversation view and leaves the split view. |
-| **Close** | Removes the window. The session stays in the sidebar history. |
+| **展开** | 在完整对话页中打开该会话，并离开分屏。 |
+| **关闭** | 移除该窗口；会话仍保留在左侧栏历史中。 |
 
-The panel toolbar also offers:
+面板工具栏还提供：
 
-| Action | What it does |
+| 操作 | 作用 |
 | --- | --- |
-| **Reset pane sizes** | Drops every custom width and height. |
-| **Close all** | Removes all windows and shows the empty state. |
-| **Back** | Returns to the regular conversation view. |
-| **＋ New chat** | Adds a blank window. |
+| **恢复等分大小** | 清除所有自定义宽高。 |
+| **全部关闭** | 移除全部窗口，显示空状态。 |
+| **返回对话** | 回到普通对话页。 |
+| **＋ 新建对话** | 新增一个空白窗口。 |
 
-### 7. Everyday workflows
+### 7. 常见工作流
 
-- **Compare two approaches.** Ask the same question in two windows and read the answers side by side.
-- **Keep a reference conversation open.** Pin a spec, plan or notes session in one window while you implement in another.
-- **Run independent tasks.** Let one window build while another reviews, without the two transcripts interleaving.
-- **Use different models or permissions per task.** Each window keeps its own model and access selection.
-- **Assemble a board from history.** Open old sessions one by one and click the header button to add each to the split view.
+- **对比两种方案**：在同一个问题上开两个窗口，并排阅读两个回答。
+- **保留参考对话**：一个窗口放规格、计划或笔记，另一个窗口用来实现。
+- **并行推进独立任务**：一个窗口写代码，另一个窗口做审查，两份记录互不穿插。
+- **不同任务用不同模型或权限**：每个窗口都保留自己的模型与访问模式选择。
+- **从历史拼出工作板**：逐个打开旧会话并点击头部按钮，把它们加入同一个分屏。
 
-### 8. Tips
+### 8. 小技巧
 
-- The current conversation is always the first window; close it if it is not part of the task.
-- Closing a window releases the plugin's session retention, which frees memory; the session itself is untouched.
-- Prefer 2–4 windows for reading comfort; 16 is a hard cap, not a target.
-- Double-click a window's resize corner to restore its default size without touching the other windows.
-- Rename a session in the sidebar; the window title follows automatically.
+- 当前对话永远是第一个窗口；如果它不属于这次任务，直接关掉即可。
+- 关闭窗口会释放插件对该会话的 retention，占用更少内存；会话本身不受影响。
+- 2–4 个窗口阅读最舒服；16 是硬上限，不是目标。
+- 双击窗口的缩放手柄可以只恢复这一个窗口，不影响其他窗口。
+- 在左侧栏重命名会话后，窗口标题会自动更新。
 
-## Troubleshooting
+## 常见问题
 
-| Symptom | Why | Fix |
+| 现象 | 原因 | 处理 |
 | --- | --- | --- |
-| The split-view button is missing | The bundle is disabled, the page predates the install, or the Host is incompatible | Check **Plugins** that the bundle is enabled; refresh the page once; verify the Harness version against [Compatibility](#compatibility). |
-| **＋ New chat** is disabled | There are already 16 windows, or this Peer may not create sessions | Close a window; check the profile's session-create permission. |
-| Windows disappeared after restarting the desktop app | Pane layout is stored in browser `localStorage`, and the desktop app serves the UI from a new local port on each launch, so the origin changes | Recreate the windows; this is a known limitation. |
-| A window is too narrow to read | The free-wrap layout keeps a 300 px minimum width | Enlarge the app window, resize the pane, or close some windows. |
-| The panel is empty after opening | All windows were closed earlier and the current session was not added automatically | Click **＋ New chat**, or go back to a conversation and use the header button again. |
-| `slot entry crashed` in the browser console | A Harness client contract changed | Check the [Compatibility](#compatibility) section and open an issue with the Harness version and console output. |
-| Install fails with an `engines.dsh` error | The Harness version is outside the supported range | Upgrade or downgrade Harness, or open an issue for a compatibility release. |
+| 看不到分屏按钮 | bundle 未启用、页面在安装前打开，或 Host 版本不兼容 | 到 **插件** 页确认 bundle 已启用；刷新一次页面；对照[兼容性](#兼容性)检查 Harness 版本。 |
+| **＋ 新建对话** 是灰的 | 已有 16 个窗口，或当前 Peer 没有创建会话的权限 | 关闭一个窗口；检查 profile 的 session-create 权限。 |
+| 重启桌面端后窗口都没了 | 窗口布局存在浏览器 `localStorage`，而桌面端每次启动的本地端口不同，页面源随之变化 | 重新创建窗口；这是已知限制。 |
+| 窗口太窄看不清 | 自由换行布局保留了 300 px 最小宽度 | 放大应用窗口、调整该窗口大小，或关闭部分窗口。 |
+| 打开面板后是空的 | 之前关闭了全部窗口，且当前会话没有被自动加入 | 点 **＋ 新建对话**，或回到对话页再点一次右上角按钮。 |
+| 控制台出现 `slot entry crashed` | Harness 客户端契约发生变化 | 查看[兼容性](#兼容性)，并附上 Harness 版本和浏览器控制台输出提 issue。 |
+| 安装时报 `engines.dsh` 错误 | Harness 版本超出支持范围 | 升级/降级 Harness，或提 issue 请求适配版本。 |
 
-## Update and uninstall
+## 更新与卸载
 
-- **Update:** open **Plugins**, find the bundle, and use **Versions → Update** when a newer registry version is available.
-- **Disable:** switch the bundle off; the sidebar entry and header button disappear immediately.
-- **Uninstall:** remove the bundle from the same page.
+- **更新**：打开 **插件**，找到该 bundle，在有新版本时使用 **版本 → 更新**。
+- **停用**：关闭 bundle 开关；左侧栏入口和右上角按钮会立即消失。
+- **卸载**：在同一页面移除该 bundle。
 
-## How it works
+## 实现
 
-The package is a normal DSH bundle with a browser half:
+这是一个普通 DSH bundle，包含一个浏览器端插件：
 
-- `package.json` declares `dsh.bundle.patch` and `dsh.client` (`platform: web`, `immediately: true`).
-- `cordis.patch.yml` inserts the Host row that carries the bundle.
-- `client.js` registers:
-  - the `main` panel `multichat`, with a session-scoped child slot `multichat.pane`;
-  - the `conversation.session.header.utilities` button;
-  - one `SessionProvider` per window, bound to a Session reference retained with the `multichat` retention source;
-  - the shipped `conversation.content` factory inside each window.
+- `package.json` 声明 `dsh.bundle.patch` 与 `dsh.client`（`platform: web`、`immediately: true`）。
+- `cordis.patch.yml` 插入承载该 bundle 的 Host 行。
+- `client.js` 注册：
+  - `main` 面板 `multichat`，带一个 session 作用域的子槽 `multichat.pane`；
+  - `conversation.session.header.utilities` 右上角按钮；
+  - 每个窗口一个 `SessionProvider`，绑定以 `multichat` 为 retention source 保留的会话引用；
+  - 窗口内部渲染官方 `conversation.content` factory。
 
-Pane identity and sizes are stored in `localStorage` under `dsh.multichat.panes.v2` (the previous `...v1` key is migrated automatically). The Host owns the session log; the plugin never writes session events.
+窗口列表和尺寸保存在 `localStorage` 的 `dsh.multichat.panes.v2`（会自动迁移旧的 `...v1`）。会话日志仍由 Host 拥有，插件不写入任何会话事件。
 
-Because the panel is a global `main` panel, opening it does not disturb the sidebar, the right sidebar, or session history.
+由于面板是全局 `main` 面板，打开它不会影响左侧栏、右侧边栏或会话历史。
 
-## Compatibility
+## 兼容性
 
-Tested with DeepSeek Harness `0.2.2-rc.1` (client commit `c59d10a`) on Windows desktop, with the `web` bundle.
+已在 DeepSeek Harness `0.2.2-rc.1`（客户端 commit `c59d10a`）的 Windows 桌面端 + `web` bundle 上测试。
 
-This plugin intentionally uses a small set of Harness client contracts:
+插件使用了少量 Harness 客户端内部契约：
 
-- the `main` keyed slot and its `entryKey` rendering;
-- the `conversation.content` Component Factory with the `embedded` variant;
-- `SessionProvider` and the `conversation.session.header.utilities` slot;
-- `ctx.layout`, `ctx.sessions`, `ctx.uiWorkspace` and `ctx.locale`.
+- `main` keyed slot 及其 `entryKey` 渲染；
+- `conversation.content` Component Factory 的 `embedded` 变体；
+- `SessionProvider` 与 `conversation.session.header.utilities` 插槽；
+- `ctx.layout`、`ctx.sessions`、`ctx.uiWorkspace`、`ctx.locale`。
 
-These are internal APIs of the current DSH line. A Harness upgrade may change them; when that happens the plugin needs a matching release. Bug reports with the Harness version and the browser console output are welcome.
+这些是当前 DSH 版本的内部 API；Harness 升级可能改变它们，届时插件需要发布适配版本。提交问题时请附上 Harness 版本和浏览器控制台输出。
 
-## Privacy
+## 隐私
 
-- No analytics, telemetry, remote requests or background processes.
-- The plugin reads Session data only through the same client services the UI already uses.
-- Pane layout is stored locally in the browser origin; deleting site data resets it.
-- Conversation content remains in DSH's normal session storage, untouched.
+- 无统计、遥测、远程请求或后台进程。
+- 插件通过 UI 已有的客户端服务读取会话数据。
+- 窗口布局仅存于浏览器本地；清除站点数据即可重置。
+- 对话内容仍在 DSH 正常的会话存储中，插件不会修改。
 
-## Development
+## 开发
 
-There is no build step: `client.js` is the browser bundle and `index.js` is the (empty) Host half.
+没有构建步骤：`client.js` 即浏览器 bundle，`index.js` 是（空的）Host 半边。
 
 ```bash
-npm test        # manifest / bundle consistency checks
+npm test        # 清单 / bundle 一致性检查
 npm pack --dry-run
 ```
 
-Local loop:
+本地开发流程：
 
-1. Install the checkout through **Plugins → Add plugin → local directory**.
-2. Edit `client.js`.
-3. The Host detects the new bundle revision and pushes it to the open page; refresh once if the page does not pick it up.
-4. Run through the checklist in [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+1. 通过 **插件 → 添加插件 → 本地目录** 安装该目录；
+2. 修改 `client.js`；
+3. Host 检测到新的 bundle revision 后会推送到已打开的页面；若未生效，刷新一次；
+4. 按 [CONTRIBUTING.md](CONTRIBUTING.md) 的检查清单自测后再提 PR。
 
-## Contributing
+## 贡献
 
-Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the development setup, the manual test checklist and the engineering rules. Release steps live in [RELEASE.md](RELEASE.md).
+欢迎提交 issue 和 pull request。开发环境、手动测试清单和工程约定见 [CONTRIBUTING.md](CONTRIBUTING.md)；发布流程见 [RELEASE.md](RELEASE.md)。
 
-## License
+## 许可证
 
 [MIT](LICENSE)

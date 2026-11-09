@@ -27,7 +27,7 @@ The package already points at `github.com/lihang212010/dsh-multichat`:
 ```
 
 If you rename the repository or publish a fork, update all three plus the
-`git clone` commands in `README.md` and `README.zh.md`. `npm publish` runs
+`git clone` commands in `README.en.md` and `README.md`. `npm publish` runs
 `scripts/check.mjs --publish`, which refuses to continue while the template
 `your-github-user` placeholder is present.
 

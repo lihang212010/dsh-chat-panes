@@ -25,7 +25,7 @@ for (const file of [
   'icon.svg',
   'LICENSE',
   'README.md',
-  'README.zh.md',
+  'README.en.md',
   'locale/en.json',
   'locale/zh.json',
 ]) {
