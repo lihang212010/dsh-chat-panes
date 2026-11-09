@@ -13,7 +13,7 @@
  * trip to another panel restores the workspace.
  */
 window.__ModuleLoader__.load({
-  id: 'dsh-multiwindow',
+  id: 'dsh-chat-panes',
   factory(require) {
     const React = require('react');
     const h = React.createElement;

@@ -5,11 +5,12 @@ repository.
 
 ## 0. One-time decisions
 
-- **Package name.** Published as `dsh-multiwindow`. npm rejected the
-  unscoped `dsh-multichat` as too similar to the existing `dsh-multi-chat`.
-  If you publish under another account, update `package.json`,
-  `cordis.patch.yml`, the `__ModuleLoader__` id in `client.js`, and the install
-  commands in both READMEs together.
+- **Package name.** Published as `dsh-chat-panes`. npm rejects names too close
+  to the existing `dsh-multi-chat` and `dsh-multi-window` (`dsh-multichat` and
+  `dsh-multiwindow` were both refused), so this name deliberately avoids the
+  `dsh-multi-*` prefix. If you publish under another account, update
+  `package.json`, `cordis.patch.yml`, the `__ModuleLoader__` id in `client.js`,
+  and the install commands in both READMEs together.
 - **License holder.** `LICENSE` says `Long Laban`. Change it if you publish
   under a different name.
 - **Author metadata.** `package.json` sets `author` to `Long Laban`.
@@ -98,7 +99,7 @@ npm requires a second factor for publishes. An account that reports
 `two-factor auth: disabled` can still receive:
 
 ```text
-403 Forbidden - PUT https://registry.npmjs.org/dsh-multiwindow -
+403 Forbidden - PUT https://registry.npmjs.org/dsh-chat-panes -
 Two-factor authentication or granular access token with bypass 2fa enabled is required to publish packages.
 ```
 
@@ -130,7 +131,7 @@ Never commit a token. Revoke it immediately if it leaks.
 Verify the result:
 
 ```bash
-npm view dsh-multiwindow version
+npm view dsh-chat-panes version
 ```
 
 ## 5. Tag the release
@@ -163,7 +164,7 @@ statement to the release.
 On a clean Harness profile:
 
 1. **Plugins → Add plugin → Install a third-party plugin**.
-2. Enter `dsh-multiwindow`.
+2. Enter `dsh-chat-panes`.
 3. Confirm that the bundle and plugin rows appear, the icon and localized title
    render, and the split-view button opens the panel.
 4. Repeat with the local directory path to confirm source installs still work.

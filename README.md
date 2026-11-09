@@ -1,8 +1,8 @@
-# dsh-multiwindow
+# dsh-chat-panes
 
 [English](README.en.md) | **简体中文**
 
-[![npm version](https://img.shields.io/npm/v/dsh-multiwindow.svg)](https://www.npmjs.com/package/dsh-multiwindow)
+[![npm version](https://img.shields.io/npm/v/dsh-chat-panes.svg)](https://www.npmjs.com/package/dsh-chat-panes)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-lihang212010%2Fdsh--multichat-181717?logo=github)](https://github.com/lihang212010/dsh-multichat)
 
@@ -61,16 +61,16 @@
 3. 输入包名并确认：
 
    ```text
-   dsh-multiwindow
+   dsh-chat-panes
    ```
 
 4. 打开一个已有对话，点击头部右上角的分屏按钮。
 
-安装对话框也支持带版本号（`dsh-multiwindow@0.1.0`）、Git 地址、tarball 或本地目录绝对路径。
+安装对话框也支持带版本号（`dsh-chat-panes@0.1.0`）、Git 地址、tarball 或本地目录绝对路径。
 
 ### 通过智能体
 
-让 DSH 智能体使用插件管理器安装该包，或调用等价的 `plugin_manager` `install_bundle`，target 为 `dsh-multiwindow`。
+让 DSH 智能体使用插件管理器安装该包，或调用等价的 `plugin_manager` `install_bundle`，target 为 `dsh-chat-panes`。
 
 ### 从源码
 

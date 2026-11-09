@@ -8,8 +8,8 @@ All notable changes to this project are documented here. The format follows
 
 ### Changed
 
-- The npm package is renamed to `dsh-multiwindow` (unscoped). Install
-  `dsh-multiwindow`; the previous scoped package is deprecated.
+- The npm package is renamed to `dsh-chat-panes` (unscoped). Install
+  `dsh-chat-panes`; the previous scoped package is deprecated.
 - Chinese is now the default README (`README.md`). The English edition moved to
   `README.en.md`; both files link to each other.
 
