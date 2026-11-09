@@ -121,7 +121,7 @@ Sending a message in one window does not change the others. The window header sh
 - Drag horizontally for width, vertically for height; the minimum is 300 × 220 px.
 - **Double-click** the corner to reset that window to its default size.
 - The toolbar's **reset sizes** icon clears every custom size at once.
-- To move a window, drag the **six-dot grip** at the left of its header. A dashed outline marks the window that will take the dragged position; release to drop.
+- To move a window, drag the **six-dot grip or the title text** at the left of its header. A dashed outline marks the window that will take the dragged position; release to drop.
 - The new order is saved with the layout. With the grip focused, the arrow keys move the window one position.
 - Sizes persist when you close the panel and reopen it, or refresh the page in the same app session.
 
