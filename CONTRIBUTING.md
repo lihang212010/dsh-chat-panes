@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for taking a look at `dsh-multichat`. This is a small, build-free plugin; the most useful contributions are compatibility fixes, accessibility improvements, and carefully scoped layout features.
+Thanks for taking a look at `dsh-multiwindow`. This is a small, build-free plugin; the most useful contributions are compatibility fixes, accessibility improvements, and carefully scoped layout features.
 
 ## Development setup
 

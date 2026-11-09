@@ -5,7 +5,7 @@ repository.
 
 ## 0. One-time decisions
 
-- **Package name.** Published as `@lihang212010/dsh-multichat`. npm rejected the
+- **Package name.** Published as `dsh-multiwindow`. npm rejected the
   unscoped `dsh-multichat` as too similar to the existing `dsh-multi-chat`.
   If you publish under another account, update `package.json`,
   `cordis.patch.yml`, the `__ModuleLoader__` id in `client.js`, and the install
@@ -98,7 +98,7 @@ npm requires a second factor for publishes. An account that reports
 `two-factor auth: disabled` can still receive:
 
 ```text
-403 Forbidden - PUT https://registry.npmjs.org/@lihang212010%2Fdsh-multichat -
+403 Forbidden - PUT https://registry.npmjs.org/dsh-multiwindow -
 Two-factor authentication or granular access token with bypass 2fa enabled is required to publish packages.
 ```
 
@@ -130,7 +130,7 @@ Never commit a token. Revoke it immediately if it leaks.
 Verify the result:
 
 ```bash
-npm view @lihang212010/dsh-multichat version
+npm view dsh-multiwindow version
 ```
 
 ## 5. Tag the release
@@ -163,7 +163,7 @@ statement to the release.
 On a clean Harness profile:
 
 1. **Plugins → Add plugin → Install a third-party plugin**.
-2. Enter `@lihang212010/dsh-multichat`.
+2. Enter `dsh-multiwindow`.
 3. Confirm that the bundle and plugin rows appear, the icon and localized title
    render, and the split-view button opens the panel.
 4. Repeat with the local directory path to confirm source installs still work.

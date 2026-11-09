@@ -1,8 +1,8 @@
-# dsh-multichat
+# dsh-multiwindow
 
 **English** | [简体中文](README.md)
 
-[![npm version](https://img.shields.io/npm/v/@lihang212010/dsh-multichat.svg)](https://www.npmjs.com/package/@lihang212010/dsh-multichat)
+[![npm version](https://img.shields.io/npm/v/dsh-multiwindow.svg)](https://www.npmjs.com/package/dsh-multiwindow)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-lihang212010%2Fdsh--multichat-181717?logo=github)](https://github.com/lihang212010/dsh-multichat)
 
@@ -61,16 +61,16 @@ Open it from the split-view button at the **top-right of the conversation header
 3. Enter the package name and confirm:
 
    ```text
-   @lihang212010/dsh-multichat
+   dsh-multiwindow
    ```
 
 4. Open an existing conversation and click the split-view button at the top-right of the header.
 
-The field also accepts an explicit version (`@lihang212010/dsh-multichat@0.1.0`), a Git address, a tarball, or an absolute path to a local checkout.
+The field also accepts an explicit version (`dsh-multiwindow@0.1.0`), a Git address, a tarball, or an absolute path to a local checkout.
 
 ### From an agent
 
-Ask your DSH agent to install the package with the plugin manager, or run the equivalent `plugin_manager` `install_bundle` action with target `@lihang212010/dsh-multichat`.
+Ask your DSH agent to install the package with the plugin manager, or run the equivalent `plugin_manager` `install_bundle` action with target `dsh-multiwindow`.
 
 ### From source
 
