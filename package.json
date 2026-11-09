@@ -17,11 +17,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lihang212010/dsh-multichat.git"
+    "url": "git+https://github.com/lihang212010/dsh-chat-panes.git"
   },
-  "homepage": "https://github.com/lihang212010/dsh-multichat#readme",
+  "homepage": "https://github.com/lihang212010/dsh-chat-panes#readme",
   "bugs": {
-    "url": "https://github.com/lihang212010/dsh-multichat/issues"
+    "url": "https://github.com/lihang212010/dsh-chat-panes/issues"
   },
   "exports": {
     ".": "./index.js",

@@ -4,7 +4,7 @@
 
 [![npm version](https://img.shields.io/npm/v/dsh-chat-panes.svg)](https://www.npmjs.com/package/dsh-chat-panes)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![GitHub](https://img.shields.io/badge/GitHub-lihang212010%2Fdsh--multichat-181717?logo=github)](https://github.com/lihang212010/dsh-multichat)
+[![GitHub](https://img.shields.io/badge/GitHub-lihang212010%2Fdsh--chat--panes-181717?logo=github)](https://github.com/lihang212010/dsh-chat-panes)
 
 在 DeepSeek Harness Web GUI 中并排运行最多 **16 个真实对话窗口**。
 
@@ -75,7 +75,7 @@
 ### 从源码
 
 ```bash
-git clone https://github.com/lihang212010/dsh-multichat.git
+git clone https://github.com/lihang212010/dsh-chat-panes.git
 ```
 
 在 Plugin Manager 中选择 **安装第三方插件**，输入该目录的绝对路径。Host 会以链接方式安装，修改源码后无需复制文件。

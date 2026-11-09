@@ -19,12 +19,12 @@ repository.
 
 ## 1. Verify the repository metadata
 
-The package already points at `github.com/lihang212010/dsh-multichat`:
+The package already points at `github.com/lihang212010/dsh-chat-panes`:
 
 ```json
-"repository": { "type": "git", "url": "git+https://github.com/lihang212010/dsh-multichat.git" },
-"homepage": "https://github.com/lihang212010/dsh-multichat#readme",
-"bugs": { "url": "https://github.com/lihang212010/dsh-multichat/issues" }
+"repository": { "type": "git", "url": "git+https://github.com/lihang212010/dsh-chat-panes.git" },
+"homepage": "https://github.com/lihang212010/dsh-chat-panes#readme",
+"bugs": { "url": "https://github.com/lihang212010/dsh-chat-panes/issues" }
 ```
 
 If you rename the repository or publish a fork, update all three plus the
@@ -48,19 +48,19 @@ any screenshots referenced by the README.
 ```bash
 git init
 git add .
-git commit -m "feat: initial release of dsh-multichat"
+git commit -m "feat: initial release of dsh-chat-panes"
 ```
 
 With the GitHub CLI:
 
 ```bash
-gh repo create dsh-multichat --public --source=. --remote=origin --push
+gh repo create dsh-chat-panes --public --source=. --remote=origin --push
 ```
 
 Or create an empty repository on github.com, then:
 
 ```bash
-git remote add origin https://github.com/lihang212010/dsh-multichat.git
+git remote add origin https://github.com/lihang212010/dsh-chat-panes.git
 git branch -M main
 git push -u origin main
 ```

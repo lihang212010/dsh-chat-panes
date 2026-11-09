@@ -13,7 +13,7 @@ Install the checkout without copying it:
 
 1. Open **Plugins → Add plugin → Install a third-party plugin**.
 2. Enter the absolute path of this repository (for example
-   `C:\Users\me\code\dsh-multichat`).
+   `C:\Users\me\code\dsh-chat-panes`).
 3. Open an existing conversation and use the split-view button.
 
 The Host links the directory, so edits to `client.js` take effect through HMR;

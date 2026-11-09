@@ -4,7 +4,7 @@
 
 [![npm version](https://img.shields.io/npm/v/dsh-chat-panes.svg)](https://www.npmjs.com/package/dsh-chat-panes)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![GitHub](https://img.shields.io/badge/GitHub-lihang212010%2Fdsh--multichat-181717?logo=github)](https://github.com/lihang212010/dsh-multichat)
+[![GitHub](https://img.shields.io/badge/GitHub-lihang212010%2Fdsh--chat--panes-181717?logo=github)](https://github.com/lihang212010/dsh-chat-panes)
 
 Run up to **16 live conversations side by side** in the DeepSeek Harness Web GUI.
 
@@ -75,7 +75,7 @@ Ask your DSH agent to install the package with the plugin manager, or run the eq
 ### From source
 
 ```bash
-git clone https://github.com/lihang212010/dsh-multichat.git
+git clone https://github.com/lihang212010/dsh-chat-panes.git
 ```
 
 In the Plugin Manager, choose **Install a third-party plugin** and enter the absolute path of the checkout. The Host links the directory, so edits are picked up without copying files.
