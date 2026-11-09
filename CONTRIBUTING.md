@@ -49,6 +49,8 @@ Run through these before opening a pull request:
 - [ ] `＋ New chat` adds a blank session; the 16th addition disables the button.
 - [ ] Dragging a window corner resizes it; the size survives closing and
       reopening the panel; double-clicking the corner resets that window.
+- [ ] Dragging a window's header grip reorders it; the order survives reopening
+      the panel, and the arrow keys move a focused grip.
 - [ ] Close, close all, back to chat, and expand-to-full-conversation all work.
 - [ ] Light and dark themes show no unreadable controls.
 - [ ] The browser console has no errors (`slot entry crashed`, React warnings,

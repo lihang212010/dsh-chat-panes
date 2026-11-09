@@ -24,7 +24,7 @@ Open it from the split-view button at the **top-right of the conversation header
   - [Add windows](#2-add-windows)
   - [Add an existing conversation](#3-add-an-existing-conversation)
   - [Work in parallel](#4-work-in-parallel)
-  - [Resize windows](#5-resize-windows)
+  - [Resize and reorder windows](#5-resize-and-reorder-windows)
   - [Expand, close, and close all](#6-expand-close-and-close-all)
   - [Everyday workflows](#7-everyday-workflows)
   - [Tips](#8-tips)
@@ -42,7 +42,7 @@ Open it from the split-view button at the **top-right of the conversation header
 - **Native chat in every window.** Each window reuses the shipped Conversation component factory (`conversation.content`, embedded variant), so drafts, attachments, tool cards, approvals, streaming and session history behave exactly like the main conversation.
 - **Top-right entry, no sidebar clutter.** A single split-view icon appears in the conversation header. Click it to open the panel with the current conversation; open another conversation and click again to add that one to the same split view. Blank sessions get the same entry as a floating button, so you can start working before the first message.
 - **Up to 16 windows.** The add button disables itself at 16 and explains why in its tooltip.
-- **Free resize.** Drag a window's bottom-right corner to change its width and height; double-click the corner to reset that window. The toolbar's reset action clears every custom size.
+- **Free resize and reorder.** Drag a window's bottom-right corner to change its width and height; double-click the corner to reset that window. Drag the six-dot grip at the left of a window header to move the window; the new order is saved. The toolbar's reset action clears every custom size.
 - **Open, close, expand, close all.** Close a window without losing its session, or expand a window into the full conversation view.
 - **Light and dark themes** through DSH theme tokens, plus Chinese and English UI copy.
 - **No telemetry, no network requests.** The plugin only talks to the local Harness UI.
@@ -115,12 +115,14 @@ Each window is an independent conversation:
 
 Sending a message in one window does not change the others. The window header shows the live session title, its workspace, and whether the window is the active one.
 
-### 5. Resize windows
+### 5. Resize and reorder windows
 
 - Hover a window and drag the **bottom-right corner**. The handle appears on hover.
 - Drag horizontally for width, vertically for height; the minimum is 300 × 220 px.
 - **Double-click** the corner to reset that window to its default size.
 - The toolbar's **reset sizes** icon clears every custom size at once.
+- To move a window, drag the **six-dot grip** at the left of its header. A dashed outline marks the window that will take the dragged position; release to drop.
+- The new order is saved with the layout. With the grip focused, the arrow keys move the window one position.
 - Sizes persist when you close the panel and reopen it, or refresh the page in the same app session.
 
 Windows use a free-wrap layout. Making one wider may push the following windows onto the next row; that is expected.
@@ -157,6 +159,7 @@ The panel toolbar also offers:
 - Closing a window releases the plugin's session retention, which frees memory; the session itself is untouched.
 - Prefer 2–4 windows for reading comfort; 16 is a hard cap, not a target.
 - Double-click a window's resize corner to restore its default size without touching the other windows.
+- Drag a window by its header grip to move it earlier or later; the sidebar order does not change.
 - Rename a session in the sidebar; the window title follows automatically.
 
 ## Troubleshooting

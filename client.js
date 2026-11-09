@@ -44,6 +44,7 @@ window.__ModuleLoader__.load({
       'closePane': '关闭此窗口',
       'expandPane': '在完整对话中打开',
       'resizePane': '拖动调整窗口大小',
+      'dragPane': '拖动调整窗口顺序',
       'resetSizes': '恢复等分大小',
       'closeAll': '全部关闭',
       'emptyTitle': '还没有对话窗口',
@@ -70,6 +71,7 @@ window.__ModuleLoader__.load({
       'closePane': 'Close this window',
       'expandPane': 'Open in the full conversation',
       'resizePane': 'Drag to resize this window',
+      'dragPane': 'Drag to reorder windows',
       'resetSizes': 'Reset pane sizes',
       'closeAll': 'Close all',
       'emptyTitle': 'No chat windows yet',
@@ -112,6 +114,14 @@ window.__ModuleLoader__.load({
 .mcx-pane[data-active="true"]{border-color:var(--dsw-alias-state-business-primary);box-shadow:0 0 0 1px var(--dsw-alias-state-business-primary),var(--dsw-elevation-soft)}
 .mcx-pane-header{flex:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto) auto;align-items:center;gap:10px;height:42px;padding:0 8px 0 14px;border-bottom:.5px solid var(--dsw-alias-border-l3);background:var(--dsw-alias-bg-layer-1)}
 .mcx-pane-title-wrap{display:flex;align-items:center;gap:7px;min-width:0}
+.mcx-pane-grip{display:inline-flex;align-items:center;justify-content:center;width:16px;height:22px;flex:none;border-radius:4px;color:var(--dsw-alias-label-tertiary);cursor:grab;touch-action:none;opacity:.75}
+.mcx-pane-grip:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-interactive-bg-hover);opacity:1}
+.mcx-pane-grip:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:1px}
+.mcx-pane[data-dragging="true"]{opacity:.55;transition:opacity .12s ease}
+.mcx-pane[data-drop="before"],.mcx-pane[data-drop="after"]{border-color:var(--dsw-alias-state-business-primary);outline:1px dashed var(--dsw-alias-state-business-primary);outline-offset:-4px}
+.mcx-pane[data-drop="before"]:before,.mcx-pane[data-drop="after"]:before{content:"";position:absolute;left:10px;right:10px;height:2px;border-radius:2px;background:var(--dsw-alias-state-business-primary);z-index:4}
+.mcx-pane[data-drop="before"]:before{top:0}
+.mcx-pane[data-drop="after"]:before{bottom:0}
 .mcx-pane-title{font-size:13px;font-weight:500;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .mcx-pane-workspace{display:inline-flex;align-items:center;gap:4px;min-width:0;font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;justify-self:center}
 .mcx-pane-workspace svg{flex:none}
@@ -257,6 +267,17 @@ window.__ModuleLoader__.load({
       ]);
     }
 
+    function GripIcon(props) {
+      return h(Svg, { size: props.size }, [
+        h('circle', { key: 'a', cx: 9, cy: 6, r: 1.35, fill: 'currentColor' }),
+        h('circle', { key: 'b', cx: 15, cy: 6, r: 1.35, fill: 'currentColor' }),
+        h('circle', { key: 'c', cx: 9, cy: 12, r: 1.35, fill: 'currentColor' }),
+        h('circle', { key: 'd', cx: 15, cy: 12, r: 1.35, fill: 'currentColor' }),
+        h('circle', { key: 'e', cx: 9, cy: 18, r: 1.35, fill: 'currentColor' }),
+        h('circle', { key: 'f', cx: 15, cy: 18, r: 1.35, fill: 'currentColor' }),
+      ]);
+    }
+
     /* ------------------------------------------------------------------ */
     /* Persistence                                                         */
     /* ------------------------------------------------------------------ */
@@ -352,6 +373,25 @@ window.__ModuleLoader__.load({
           if (target === undefined || (target.w === undefined && target.h === undefined)) return;
           commit(panes.map((pane) => pane.id === sessionId ? { id: pane.id } : pane));
         },
+        move(sessionId, toIndex) {
+          const from = panes.findIndex((pane) => pane.id === sessionId);
+          if (from < 0) return;
+          const next = panes.filter((pane) => pane.id !== sessionId);
+          const index = Math.max(0, Math.min(next.length, toIndex));
+          next.splice(index, 0, panes[from]);
+          if (next.every((pane, position) => pane.id === panes[position].id)) return;
+          commit(next);
+        },
+        moveBy(sessionId, delta) {
+          const from = panes.findIndex((pane) => pane.id === sessionId);
+          if (from < 0) return;
+          const to = from + delta;
+          if (to < 0 || to >= panes.length) return;
+          const next = [...panes];
+          const [pane] = next.splice(from, 1);
+          next.splice(to, 0, pane);
+          commit(next);
+        },
       };
     }
 
@@ -418,6 +458,7 @@ window.__ModuleLoader__.load({
       const {
         sessionId, pane, reference, active, t, SessionProvider, renderSlot,
         useSessions, useWorkspaces, openSession, closePane, activate, onResize,
+        dragging, dropTarget, dropPosition, onDragStart, onMoveKey,
       } = props;
       const title = useSessions((state) => state.byId[sessionId] === undefined ? undefined : state.byId[sessionId].title);
       const workspaceTitle = useWorkspaces((state) => {
@@ -501,11 +542,24 @@ window.__ModuleLoader__.load({
         style,
         'data-active': active ? 'true' : undefined,
         'data-session-id': sessionId,
+        'data-dragging': dragging ? 'true' : undefined,
+        'data-drop': dropTarget ? dropPosition : undefined,
         onPointerDownCapture: activate,
       }, [
         h('header', { key: 'header', className: 'mcx-pane-header' }, [
-          h('div', { key: 'title', className: 'mcx-pane-title-wrap' },
-            h('span', { key: 'label', className: 'mcx-pane-title', title: label }, label)),
+          h('div', { key: 'title', className: 'mcx-pane-title-wrap' }, [
+            h('span', {
+              key: 'grip',
+              className: 'mcx-pane-grip',
+              role: 'button',
+              tabIndex: 0,
+              title: t('dragPane'),
+              'aria-label': t('dragPane'),
+              onPointerDown: (event) => onDragStart(sessionId, event),
+              onKeyDown: (event) => onMoveKey(sessionId, event),
+            }, h(GripIcon, { size: 14 })),
+            h('span', { key: 'label', className: 'mcx-pane-title', title: label }, label),
+          ]),
           h('span', { key: 'workspace', className: 'mcx-pane-workspace', title: workspaceLabel }, [
             workspaceLabel === undefined ? null : h(FolderIcon, { key: 'icon', size: 12 }),
             workspaceLabel === undefined ? null : h('span', { key: 'name' }, workspaceLabel),
@@ -570,6 +624,12 @@ window.__ModuleLoader__.load({
       const [activeId, setActiveId] = React.useState(null);
       const [creating, setCreating] = React.useState(false);
       const [errorText, setErrorText] = React.useState(null);
+      const [draggingId, setDraggingId] = React.useState(null);
+      const [dropTargetId, setDropTargetId] = React.useState(null);
+      const [dropPosition, setDropPosition] = React.useState(null);
+      const dragRef = React.useRef(null);
+      const dropIndexRef = React.useRef(null);
+      const canvasRef = React.useRef(null);
       const refsRef = React.useRef(new Map());
       const [, setRefsVersion] = React.useState(0);
       const seededRef = React.useRef(false);
@@ -578,6 +638,8 @@ window.__ModuleLoader__.load({
       const createAllowed = canCreate !== false;
       const paneIds = panes.map((pane) => pane.id);
       const idsKey = paneIds.join('|');
+      const paneIdsRef = React.useRef(paneIds);
+      paneIdsRef.current = paneIds;
 
       /* Seed the first pane with the conversation the user came from. */
       React.useEffect(() => {
@@ -634,6 +696,10 @@ window.__ModuleLoader__.load({
           }
         }
         refsRef.current.clear();
+        if (dragRef.current !== null && dragRef.current.cleanup !== undefined) dragRef.current.cleanup();
+        dragRef.current = null;
+        document.body.style.userSelect = '';
+        document.body.style.cursor = '';
       }, []);
 
       /* Keep the active ring on an existing pane. */
@@ -680,6 +746,108 @@ window.__ModuleLoader__.load({
         }
         paneStore.resize(sessionId, width, height);
       }, [paneStore]);
+
+      const updateDropTarget = (drag, clientX, clientY) => {
+        const element = document.elementFromPoint(clientX, clientY);
+        const paneEl = element === null ? null : element.closest('section.mcx-pane');
+        if (paneEl !== null) {
+          const targetId = paneEl.getAttribute('data-session-id');
+          if (targetId === null || targetId === drag.id) {
+            dropIndexRef.current = null;
+            setDropTargetId(null);
+            setDropPosition(null);
+            return;
+          }
+          const rest = paneIdsRef.current.filter((id) => id !== drag.id);
+          const index = rest.indexOf(targetId);
+          if (index < 0) return;
+          const rect = paneEl.getBoundingClientRect();
+          const relativeY = (clientY - rect.top) / Math.max(1, rect.height);
+          const after = relativeY < 0.25
+            ? false
+            : relativeY > 0.75 ? true : clientX > rect.left + rect.width / 2;
+          dropIndexRef.current = after ? index + 1 : index;
+          setDropTargetId(targetId);
+          setDropPosition(after ? 'after' : 'before');
+          return;
+        }
+        const canvas = canvasRef.current;
+        if (canvas !== null) {
+          const rect = canvas.getBoundingClientRect();
+          const inside = clientX >= rect.left && clientX <= rect.right
+            && clientY >= rect.top && clientY <= rect.bottom;
+          if (inside) {
+            const rest = paneIdsRef.current.filter((id) => id !== drag.id);
+            dropIndexRef.current = rest.length;
+            setDropTargetId(rest.length === 0 ? null : rest[rest.length - 1]);
+            setDropPosition(rest.length === 0 ? null : 'after');
+            return;
+          }
+        }
+        dropIndexRef.current = null;
+        setDropTargetId(null);
+        setDropPosition(null);
+      };
+
+      const finishPaneDrag = (commit) => {
+        const drag = dragRef.current;
+        if (drag === null) return;
+        dragRef.current = null;
+        if (drag.cleanup !== undefined) drag.cleanup();
+        document.body.style.userSelect = '';
+        document.body.style.cursor = '';
+        const index = dropIndexRef.current;
+        dropIndexRef.current = null;
+        setDraggingId(null);
+        setDropTargetId(null);
+        setDropPosition(null);
+        if (commit && index !== null) paneStore.move(drag.id, index);
+      };
+
+      const startPaneDrag = (sessionId, event) => {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const pointerId = event.pointerId;
+        const drag = { id: sessionId, pointerId, cleanup: undefined };
+        const onMove = (moveEvent) => {
+          if (moveEvent.pointerId !== pointerId) return;
+          updateDropTarget(drag, moveEvent.clientX, moveEvent.clientY);
+        };
+        const onUp = (upEvent) => {
+          if (upEvent.pointerId !== pointerId) return;
+          finishPaneDrag(true);
+        };
+        const onCancel = (cancelEvent) => {
+          if (cancelEvent.pointerId !== pointerId) return;
+          finishPaneDrag(false);
+        };
+        drag.cleanup = () => {
+          document.removeEventListener('pointermove', onMove, true);
+          document.removeEventListener('pointerup', onUp, true);
+          document.removeEventListener('pointercancel', onCancel, true);
+        };
+        dragRef.current = drag;
+        dropIndexRef.current = null;
+        setDraggingId(sessionId);
+        setDropTargetId(null);
+        setDropPosition(null);
+        document.addEventListener('pointermove', onMove, true);
+        document.addEventListener('pointerup', onUp, true);
+        document.addEventListener('pointercancel', onCancel, true);
+        document.body.style.userSelect = 'none';
+        document.body.style.cursor = 'grabbing';
+      };
+
+      const movePaneByKey = (sessionId, event) => {
+        let delta = 0;
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') delta = -1;
+        else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') delta = 1;
+        if (delta === 0) return;
+        event.preventDefault();
+        event.stopPropagation();
+        paneStore.moveBy(sessionId, delta);
+      };
 
       const expandPane = React.useCallback((sessionId) => {
         try {
@@ -767,13 +935,16 @@ window.__ModuleLoader__.load({
               h('span', { key: 'label' }, creating ? t('adding') : t('emptyAction')),
             ]),
           ])
-          : h('div', { key: 'canvas', className: 'mcx-canvas', 'data-count': paneIds.length },
+          : h('div', { key: 'canvas', ref: canvasRef, className: 'mcx-canvas', 'data-count': paneIds.length },
             panes.map((pane) => h(Pane, {
               key: pane.id,
               sessionId: pane.id,
               pane,
               reference: refsRef.current.get(pane.id),
               active: activeId === pane.id,
+              dragging: draggingId === pane.id,
+              dropTarget: dropTargetId === pane.id,
+              dropPosition,
               t,
               SessionProvider,
               renderSlot,
@@ -783,6 +954,8 @@ window.__ModuleLoader__.load({
               closePane,
               activate: () => setActiveId(pane.id),
               onResize: (width, height) => resizePane(pane.id, width, height),
+              onDragStart: startPaneDrag,
+              onMoveKey: movePaneByKey,
             }))),
       ]);
     }
