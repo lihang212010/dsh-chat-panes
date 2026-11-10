@@ -8,9 +8,10 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
-- Drag a window by the grip in its header to reorder the split view. The new
-  order is persisted. Focus the grip and use the arrow keys as a keyboard
-  alternative.
+- Drag a window by the grip in its header or by the title text to reorder the
+  split view. The dragged window lifts into a floating preview with a shadow,
+  and the new order is persisted. Focus the grip and use the arrow keys as a
+  keyboard alternative.
 
 ## [0.1.3] - 2026-11-09
 

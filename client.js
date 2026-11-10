@@ -117,7 +117,7 @@ window.__ModuleLoader__.load({
 .mcx-pane-grip{display:inline-flex;align-items:center;justify-content:center;width:16px;height:22px;flex:none;border-radius:4px;color:var(--dsw-alias-label-tertiary);cursor:grab;touch-action:none;opacity:.75}
 .mcx-pane-grip:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-interactive-bg-hover);opacity:1}
 .mcx-pane-grip:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:1px}
-.mcx-pane[data-dragging="true"]{opacity:.55;transition:opacity .12s ease}
+.mcx-pane[data-dragging="true"]{opacity:.25;filter:grayscale(.15)}
 .mcx-pane[data-drop="before"],.mcx-pane[data-drop="after"]{border-color:var(--dsw-alias-state-business-primary);outline:1px dashed var(--dsw-alias-state-business-primary);outline-offset:-4px}
 .mcx-pane[data-drop="before"]:before,.mcx-pane[data-drop="after"]:before{content:"";position:absolute;left:10px;right:10px;height:2px;border-radius:2px;background:var(--dsw-alias-state-business-primary);z-index:4}
 .mcx-pane[data-drop="before"]:before{top:0}
@@ -703,7 +703,16 @@ window.__ModuleLoader__.load({
           }
         }
         refsRef.current.clear();
-        if (dragRef.current !== null && dragRef.current.cleanup !== undefined) dragRef.current.cleanup();
+        if (dragRef.current !== null) {
+          if (dragRef.current.cleanup !== undefined) dragRef.current.cleanup();
+          if (dragRef.current.ghost !== null) dragRef.current.ghost.remove();
+          const dragged = dragRef.current.element;
+          if (dragged !== null && dragged !== undefined) {
+            dragged.style.pointerEvents = '';
+            dragged.style.opacity = '';
+            dragged.style.filter = '';
+          }
+        }
         dragRef.current = null;
         document.body.style.userSelect = '';
         document.body.style.cursor = '';
@@ -755,6 +764,11 @@ window.__ModuleLoader__.load({
       }, [paneStore]);
 
       const updateDropTarget = (drag, clientX, clientY) => {
+        if (drag.ghost !== null && drag.ghost !== undefined) {
+          const dx = clientX - drag.startX;
+          const dy = clientY - drag.startY;
+          drag.ghost.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(1.02)`;
+        }
         const element = document.elementFromPoint(clientX, clientY);
         const paneEl = element === null ? null : element.closest('section.mcx-pane');
         if (paneEl !== null) {
@@ -801,6 +815,13 @@ window.__ModuleLoader__.load({
         if (drag === null) return;
         dragRef.current = null;
         if (drag.cleanup !== undefined) drag.cleanup();
+        if (drag.ghost !== null && drag.ghost !== undefined) drag.ghost.remove();
+        const dragged = drag.element;
+        if (dragged !== null && dragged !== undefined) {
+          dragged.style.pointerEvents = '';
+          dragged.style.opacity = '';
+          dragged.style.filter = '';
+        }
         document.body.style.userSelect = '';
         document.body.style.cursor = '';
         const index = dropIndexRef.current;
@@ -816,7 +837,45 @@ window.__ModuleLoader__.load({
         event.preventDefault();
         event.stopPropagation();
         const pointerId = event.pointerId;
-        const drag = { id: sessionId, pointerId, cleanup: undefined };
+        const section = event.currentTarget === null ? null : event.currentTarget.closest('section.mcx-pane');
+        const drag = {
+          id: sessionId,
+          pointerId,
+          cleanup: undefined,
+          element: section,
+          ghost: null,
+          startX: event.clientX,
+          startY: event.clientY,
+        };
+        if (section !== null) {
+          const rect = section.getBoundingClientRect();
+          const ghost = section.cloneNode(true);
+          ghost.removeAttribute('data-active');
+          ghost.removeAttribute('data-dragging');
+          ghost.removeAttribute('data-drop');
+          ghost.setAttribute('aria-hidden', 'true');
+          ghost.style.cssText = [
+            'position:fixed',
+            `left:${rect.left}px`,
+            `top:${rect.top}px`,
+            `width:${rect.width}px`,
+            `height:${rect.height}px`,
+            'margin:0',
+            'z-index:2147483000',
+            'pointer-events:none',
+            'opacity:.96',
+            'transform:scale(1.02)',
+            'transform-origin:center top',
+            'box-shadow:0 24px 60px rgba(0,0,0,.28),0 6px 16px rgba(0,0,0,.18)',
+            'border-radius:var(--dsw-radius-lg)',
+            'overflow:hidden',
+            'background:var(--dsw-alias-bg-base)',
+          ].join(';');
+          document.body.appendChild(ghost);
+          drag.ghost = ghost;
+          section.style.pointerEvents = 'none';
+          section.style.opacity = '0.25';
+        }
         const onMove = (moveEvent) => {
           if (moveEvent.pointerId !== pointerId) return;
           updateDropTarget(drag, moveEvent.clientX, moveEvent.clientY);
