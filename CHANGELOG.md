@@ -12,6 +12,10 @@ All notable changes to this project are documented here. The format follows
   split view. The dragged window lifts into a floating preview with a shadow,
   and the new order is persisted. Focus the grip and use the arrow keys as a
   keyboard alternative.
+- Cross-platform client: the same Web UI bundle works on Windows, macOS, and
+  Linux. The header button is marked as a no-drag region, and the blank-session
+  header slot is guarded so a platform-specific occupant cannot disable the
+  panel.
 
 ## [0.1.3] - 2026-11-09
 

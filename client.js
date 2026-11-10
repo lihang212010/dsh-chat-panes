@@ -145,7 +145,7 @@ window.__ModuleLoader__.load({
 `;
 
     const HEADER_CSS = `
-.mcx-open-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;border-radius:var(--dsw-radius-sm);background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;flex:none}
+.mcx-open-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;border-radius:var(--dsw-radius-sm);background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;flex:none;-webkit-app-region:no-drag}
 .mcx-open-btn:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}
 .mcx-open-btn:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:2px}
 .mcx-open-btn-float{position:absolute;top:10px;right:52px;z-index:5}
@@ -1223,17 +1223,26 @@ window.__ModuleLoader__.load({
 
       const currentSession = createCurrentSessionSource(ctx);
       ctx.effect(() => () => currentSession.dispose(), 'multichat: current session source');
-      ctx.effect(() => ctx.slots.inject('conversation.header.leading', () => ctx.slots.register({
-        name: 'conversation.header.leading',
-        locale: NS,
-        inject: () => ({
-          hooks: { currentSession },
-          openWithSession: (sessionId) => {
-            store.add(sessionId);
-            ctx.layout.selectPanel(PANEL_ID);
-          },
-        }),
-      }, BlankHeaderButton)), 'multichat: blank header entry');
+      ctx.effect(() => ctx.slots.inject('conversation.header.leading', () => {
+        try {
+          return ctx.slots.register({
+            name: 'conversation.header.leading',
+            locale: NS,
+            inject: () => ({
+              hooks: { currentSession },
+              openWithSession: (sessionId) => {
+                store.add(sessionId);
+                ctx.layout.selectPanel(PANEL_ID);
+              },
+            }),
+          }, BlankHeaderButton);
+        } catch (error) {
+          // A platform-specific composition may already own this single slot.
+          // Keep the panel and the normal header entry usable without it.
+          console.warn('multichat: conversation.header.leading is occupied; blank-session entry disabled', error);
+          return () => {};
+        }
+      }), 'multichat: blank header entry');
     }
 
     return {

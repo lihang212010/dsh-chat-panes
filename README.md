@@ -51,6 +51,7 @@
 
 - DeepSeek Harness `0.2.2-rc.1` 或兼容的 `0.2.x` 版本。包内声明了 `engines.dsh`，不兼容的 Host 会被 Plugin Manager 拒绝。
 - Harness **Web UI**（桌面端或 `dsh web`）。这是浏览器插件，不适用于 `headless` / `tui` profile。
+- **Windows / macOS / Linux**：客户端只使用标准 Web API；macOS 桌面端加载的是与 Windows 相同的 Web UI bundle。
 
 ## 安装
 
@@ -198,6 +199,8 @@ git clone https://github.com/lihang212010/dsh-chat-panes.git
 ## 兼容性
 
 已在 DeepSeek Harness `0.2.2-rc.1`（客户端 commit `c59d10a`）的 Windows 桌面端 + `web` bundle 上测试。
+
+客户端只使用标准 Web API，与平台无关；macOS 桌面端加载的是同一个 Web UI bundle，因此按设计支持。空白会话的头部入口做了容错：如果某个平台特有的组合已经占用了这个 single slot，面板和普通会话的右上角入口仍然可用。维护者尚未在 macOS 实机验证；欢迎反馈具体 macOS 版本上的表现或 CSS 偏移。
 
 插件使用了少量 Harness 客户端内部契约：
 

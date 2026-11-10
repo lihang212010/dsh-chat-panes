@@ -13,7 +13,8 @@ Install the checkout without copying it:
 
 1. Open **Plugins → Add plugin → Install a third-party plugin**.
 2. Enter the absolute path of this repository (for example
-   `C:\Users\me\code\dsh-chat-panes`).
+   `C:\Users\me\code\dsh-chat-panes`; on macOS
+   `/Users/me/code/dsh-chat-panes`).
 3. Open an existing conversation and use the split-view button.
 
 The Host links the directory, so edits to `client.js` take effect through HMR;
@@ -52,6 +53,12 @@ Run through these before opening a pull request:
 - [ ] Dragging a window's header grip reorders it; the order survives reopening
       the panel, and the arrow keys move a focused grip.
 - [ ] Close, close all, back to chat, and expand-to-full-conversation all work.
+- [ ] On macOS, verify the header button, blank-session floating entry,
+      resize handle, and floating drag preview. The client uses standard Web
+      APIs, but Windows is the maintainer's verified platform; macOS relies on
+      the same `web` bundle. If the platform already owns
+      `conversation.header.leading`, the plugin must still load and the normal
+      header button must work (the blank-session float may be absent).
 - [ ] Light and dark themes show no unreadable controls.
 - [ ] The browser console has no errors (`slot entry crashed`, React warnings,
       unhandled rejections).

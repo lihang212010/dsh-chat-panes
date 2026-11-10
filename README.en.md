@@ -51,6 +51,7 @@ Open it from the split-view button at the **top-right of the conversation header
 
 - DeepSeek Harness `0.2.2-rc.1` or a compatible `0.2.x` release. The package declares `engines.dsh`, so the Plugin Manager can refuse an incompatible Host.
 - The Harness **Web UI** (desktop app or `dsh web`). This is a browser plugin; it does not apply to `headless` or `tui` profiles.
+- **Windows, macOS, or Linux.** The client half uses only standard Web APIs; the macOS desktop serves the same Web UI bundle as Windows.
 
 ## Install
 
@@ -199,6 +200,8 @@ Because the panel is a global `main` panel, opening it does not disturb the side
 ## Compatibility
 
 Tested with DeepSeek Harness `0.2.2-rc.1` (client commit `c59d10a`) on Windows desktop, with the `web` bundle.
+
+The client half is platform-neutral and uses only standard Web APIs, so the macOS desktop (same Web UI bundle) is supported by design. The blank-session header entry is guarded: if a platform-specific composition already owns that single slot, the panel and the normal header entry still work. macOS has not been hardware-verified by the maintainer yet; reports and small CSS offsets for a specific macOS build are welcome.
 
 This plugin intentionally uses a small set of Harness client contracts:
 
