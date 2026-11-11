@@ -148,7 +148,16 @@ window.__ModuleLoader__.load({
 .mcx-open-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;border-radius:var(--dsw-radius-sm);background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;flex:none;-webkit-app-region:no-drag}
 .mcx-open-btn:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}
 .mcx-open-btn:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:2px}
-.mcx-open-btn-float{position:absolute;top:10px;right:52px;z-index:5}
+/* The blank header hides the utilities, so this entry floats over the same
+   top-right spot inside the leading seat. Keep it inside a real, non-zero
+   no-drag box so the macOS window drag region excludes the control's whole
+   layout box. The box ends before the native corner control so it never covers
+   that control. */
+header:not(:has(.mcx-open-btn:not(.mcx-open-btn-float))) [data-conversation-header-leading]:has(> [data-slot] .mcx-open-btn-float){position:absolute;top:10px;right:44px;width:44px;height:28px;justify-content:flex-end;padding-right:8px;box-sizing:border-box;-webkit-app-region:no-drag}
+.mcx-open-btn-float{position:static;pointer-events:auto}
+/* A blank-flagged Session can briefly keep the normal utilities mounted (for
+   example while the first turn starts). Show only the in-flow entry then. */
+header:has(.mcx-open-btn:not(.mcx-open-btn-float)) .mcx-open-btn-float{display:none}
 `;
 
     /* ------------------------------------------------------------------ */
@@ -1044,13 +1053,14 @@ window.__ModuleLoader__.load({
     /**
      * Blank sessions hide the whole header utility area, so the normal header
      * button is not rendered there. This root-scoped entry lives in the header's
-     * leading seat and paints itself over the same top-right spot only while the
-     * current session is blank, keeping one visible entry in every state.
+     * leading seat and occupies the same top-right spot only while the current
+     * Session is blank, keeping one visible entry in every state. Its no-drag box
+     * is deliberately a real layout box so macOS does not treat it as titlebar.
      */
     function BlankHeaderButton(props) {
       const { t, useCurrentSession, openWithSession } = props;
       const current = useCurrentSession((value) => value);
-      if (current === undefined || current.blank !== true || typeof current.id !== 'string') return null;
+      if (current === undefined || current.blank !== true) return null;
       return h(React.Fragment, null,
         h('style', { key: 'style' }, HEADER_CSS),
         h('button', {
@@ -1104,14 +1114,23 @@ window.__ModuleLoader__.load({
      * Observable current Session id plus its blank flag. The blank session hides
      * the normal header utilities, so the floating entry needs to know when to
      * stand in for them.
+     *
+     * `sessions.list.byId` is a projection: it can lag behind the selection by a
+     * frame (or longer while a Summary loads), and the shipped header treats a
+     * missing Session as blank. Matching that here keeps the floating entry from
+     * disappearing for exactly the interval the normal utilities are hidden.
+     * `awaitingFirstTurn` is the Session-started-but-still-hero state, which the
+     * shipped header also renders as blank.
      */
     function createCurrentSessionSource(ctx) {
       const read = () => {
         const service = ctx.uiWorkspace;
         const selection = service === undefined || service === null ? undefined : service.selection;
         const id = selection === undefined ? undefined : selection.getSnapshot().sessionId;
-        const row = typeof id === 'string' ? ctx.sessions.list.getSnapshot().byId[id] : undefined;
-        return { id, blank: row === undefined ? false : row.blank === true };
+        if (typeof id !== 'string') return { id, blank: true };
+        const row = ctx.sessions.list.getSnapshot().byId[id];
+        const blank = row === undefined || row === null || row.blank === true || row.awaitingFirstTurn === true;
+        return { id, blank };
       };
       let snapshot = read();
       const listeners = new Set();
@@ -1149,6 +1168,10 @@ window.__ModuleLoader__.load({
         subscribe(listener) {
           listeners.add(listener);
           ensure();
+          // Catch selection/projection changes that landed between the initial
+          // read and this subscription; without it the first blank Session can
+          // stay button-less until some unrelated event repaints the header.
+          publish();
           return () => {
             listeners.delete(listener);
             if (listeners.size === 0) release();
@@ -1231,8 +1254,21 @@ window.__ModuleLoader__.load({
             inject: () => ({
               hooks: { currentSession },
               openWithSession: (sessionId) => {
-                store.add(sessionId);
-                ctx.layout.selectPanel(PANEL_ID);
+                if (typeof sessionId === 'string' && sessionId !== '') {
+                  store.add(sessionId);
+                  ctx.layout.selectPanel(PANEL_ID);
+                  return;
+                }
+                // The conversation can be blank before any Session is selected
+                // (first launch, or after the last Session was closed). Materialize
+                // one so the entry still opens a real pane instead of an empty panel.
+                createSession().then((created) => {
+                  if (typeof created !== 'string' || created === '') throw new Error('The Host returned no Session id');
+                  store.add(created);
+                  ctx.layout.selectPanel(PANEL_ID);
+                }).catch((error) => {
+                  console.warn('multichat: could not create a Session for the blank header entry', error);
+                });
               },
             }),
           }, BlankHeaderButton);

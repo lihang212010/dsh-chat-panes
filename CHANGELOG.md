@@ -4,6 +4,25 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2026-11-11
+
+### Fixed
+
+- Keep the blank-session split-view entry visible while the Session projection is
+  still catching up, or while the Session is waiting for its first turn. The
+  entry no longer disappears for exactly the interval in which Harness hides the
+  normal header utilities.
+- Give the floating entry a real no-drag layout box at the top-right and suppress
+  it whenever the in-flow header entry is mounted, so macOS never treats it as
+  window-drag geometry and the two entries cannot overlap.
+- Open the panel from a conversation that has no selected Session yet by
+  creating one when the entry is used.
+
+### Docs
+
+- FAQ: a visible but unresponsive split-view button while the preview-notice
+  modal is open is Harness's modal `inert` layer; close the modal first.
+
 ## [0.1.4] - 2026-11-09
 
 ### Added

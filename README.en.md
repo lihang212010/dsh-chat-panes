@@ -168,6 +168,8 @@ The panel toolbar also offers:
 | Symptom | Why | Fix |
 | --- | --- | --- |
 | The split-view button is missing | The bundle is disabled, the page predates the install, or the Host is incompatible | Check **Plugins** that the bundle is enabled; refresh the page once; verify the Harness version against [Compatibility](#compatibility). |
+| The split-view button is visible but does nothing | A Harness modal is open — usually the preview notice after the first launch or an update. While it is open the whole page is `inert`, so every header control is unclickable | Choose **Continue** in the dialog; if you cannot see it, refresh the page once. |
+| The button comes and goes on a blank session | Before 0.1.5, a Session summary that had not reached the list yet was treated as non-blank; switching between a blank and a normal Session could briefly hit the same window | Upgrade to 0.1.5; if it still happens, refresh and report the browser console output. |
 | **＋ New chat** is disabled | There are already 16 windows, or this Peer may not create sessions | Close a window; check the profile's session-create permission. |
 | Windows disappeared after restarting the desktop app | Pane layout is stored in browser `localStorage`, and the desktop app serves the UI from a new local port on each launch, so the origin changes | Recreate the windows; this is a known limitation. |
 | A window is too narrow to read | The free-wrap layout keeps a 300 px minimum width | Enlarge the app window, resize the pane, or close some windows. |
